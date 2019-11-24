@@ -25,6 +25,32 @@
             </div>
         </div>
     </div>
+    /////////
+    @ViewBag.UserId
+    ////////
+    <table>
+        <tr>
+            <td><p>Идентификатор</p></td>
+        </tr>
+        @foreach (var movie in ViewBag.Movies)
+        {
+            <tr>
+                <td><p>@movie.Id</p></td>
+                <td><p>@movie.UserId</p></td>
+                <td><p>
+                @if (ViewBag.UserId == movie.UserId)
+                {
+                    <span>Да</span>
+                }
+                else
+                {
+                    <span>Нет</span>
+                }
+                </p></td>
+            </tr>
+        }
+    </table>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

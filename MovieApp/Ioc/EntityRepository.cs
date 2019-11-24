@@ -14,13 +14,12 @@ namespace MovieApp.Ioc
 
     public class EntityRepository<T> : DbContext, IEntityRepository<T> where T : class
     {
-        private readonly DbContext accContext;
-        private readonly DbSet<T> accSet;
+        private readonly DbSet<T> set;
 
         public EntityRepository()
             : base("Movie")
         {
-            accSet = base.Set<T>();
+            set = base.Set<T>();
         }
 
         /// <summary>
@@ -29,7 +28,7 @@ namespace MovieApp.Ioc
         /// <param name="acc"></param>
         public void Create(T acc)
         {
-            accSet.Add(acc);
+            set.Add(acc);
             base.SaveChanges();
         }
 
@@ -39,8 +38,8 @@ namespace MovieApp.Ioc
         /// <param name="acc"></param>
         public void Update(T acc)
         {
-            accContext.Entry(acc).State = EntityState.Modified;
-            accContext.SaveChanges();
+            base.Entry(acc).State = EntityState.Modified;
+            base.SaveChanges();
         }
 
         /// <summary>
@@ -49,7 +48,7 @@ namespace MovieApp.Ioc
         /// <returns></returns>
         public IEnumerable<T> Get()
         {
-            foreach (var acc in accSet)
+            foreach (var acc in set)
                 yield return acc;
         }
 
@@ -60,7 +59,7 @@ namespace MovieApp.Ioc
         /// <returns></returns>
         public T Get(Guid id)
         {
-            return accSet.Find(id);
+            return set.Find(id);
         }
     }
 }

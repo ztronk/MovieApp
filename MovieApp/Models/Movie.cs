@@ -8,7 +8,7 @@ namespace MovieApp.Models
         /// <summary>Идентификатор фильма</summary>
         public Guid Id { get; set; }
         /// <summary>Идентификатор пользователя, создавшего запись о фильме</summary>
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         /// <summary>Наименование фильма</summary>
         public string Title { get; set; }
         /// <summary>Описание фильма</summary>

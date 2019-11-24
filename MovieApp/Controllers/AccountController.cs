@@ -160,8 +160,20 @@ namespace MovieApp.Controllers
                         {
                             accContext.Create(new Account()
                             {
+                                Id = user.Id,
                                 Email = user.Email,
                                 FullName = user.UserName
+                            });
+                        }
+
+                        using (MovieContext movieContext = new MovieContext())
+                        {
+                            movieContext.Create(new Movie()
+                            {
+                                Id = Guid.NewGuid(),
+                                UserId = user.Id,
+                                Title = "Книга " + DateTime.Now.ToShortTimeString(),
+                                Year = DateTime.Now.Year
                             });
                         }
                     }

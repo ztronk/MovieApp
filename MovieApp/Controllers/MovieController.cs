@@ -1,12 +1,19 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNet.Identity;
+using MovieApp.Models;
+using System.Web.Mvc;
 
 namespace MovieApp.Controllers
 {
     public class MovieController : Controller
     {
-        // GET: Movie
+        MovieContext movieContext = new MovieContext();
+
+        /// <summary>Список фильмов</summary>
         public ActionResult Index()
         {
+            ViewBag.UserId = User.Identity.GetUserId();
+
+            ViewBag.Movies = movieContext.Get();
             return View();
         }
     }
