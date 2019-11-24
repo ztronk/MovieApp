@@ -19,38 +19,35 @@
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("Библиотека фильмов", "Index", "Movie", new { area = "" }, new { @class = "navbar-brand" })
+                <button type="button" class="btn btn-success" onclick="location.href='@Url.Action("Create", "Movie")'">Новый фильм</button>
             </div>
             <div class="navbar-collapse collapse">
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
-    /////////
-    @ViewBag.UserId
-    ////////
-    <table>
-        <tr>
-            <td><p>Идентификатор</p></td>
-        </tr>
+
+    <table class="table">
         @foreach (var movie in ViewBag.Movies)
         {
             <tr>
-                <td><p>@movie.Id</p></td>
-                <td><p>@movie.UserId</p></td>
-                <td><p>
-                @if (ViewBag.UserId == movie.UserId)
-                {
-                    <span>Да</span>
+                <td>
+                    <span class="movie-title">@movie.Title</span>
+                    (@movie.Year)
+                    <br /><span class="movie-director">@movie.Director</span>
+                </td>
+                <td>
+                    @movie.Description
+                </td>
+                <td>
+                @*if (ViewBag.UserId != movie.UserId)*@
+                @{
+                    <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("Edit", "Movie")?id=@movie.Id'">Редактировать</button>
                 }
-                else
-                {
-                    <span>Нет</span>
-                }
-                </p></td>
+                </td>
             </tr>
         }
     </table>
-
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

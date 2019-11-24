@@ -1,0 +1,43 @@
+﻿@model MovieApp.Models.MovieEnvelop
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Новый фильм</title>
+</head>
+<body>
+    <h2>Новый фильм</h2>
+
+    @using (Html.BeginForm("Create", "Movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <fieldset>
+            @Html.LabelFor(model => model.Title, "Название фильма")
+            <br />
+            @Html.EditorFor(model => model.Title)
+            <br /><br />
+            @Html.LabelFor(model => model.Description, "Описание")
+            <br />
+            @Html.EditorFor(model => model.Description)
+            <br /><br />
+            @Html.LabelFor(model => model.Director, "Режисер")
+            <br />
+            @Html.EditorFor(model => model.Director)
+            <br /><br />
+            @Html.LabelFor(model => model.Year, "Год выпуска")
+            <br />
+            @Html.EditorFor(model => model.Year)
+            <br /><br />
+            @Html.LabelFor(model => model.Year, "Постер")
+            <br />
+            <input type="file" name="Picture" />
+            <br /><br />
+            <input type="submit" value="Добавить" />
+        </fieldset>
+    }
+</body>
+</html>

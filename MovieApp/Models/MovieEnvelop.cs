@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web;
 
 namespace MovieApp.Models
 {
-    /// <summary>Фильм</summary>
-    public class Movie
+    public class MovieEnvelop
     {
         /// <summary>Идентификатор фильма</summary>
         public Guid Id { get; set; }
@@ -23,11 +21,26 @@ namespace MovieApp.Models
         public string Director { get; set; }
         /// <summary>Постер - наименование файла</summary>
         public string Poster { get; set; }
+        /// <summary>Постер - файла</summary>
+        public HttpPostedFileBase Picture { get; set; }
 
-        public Movie()
+        public MovieEnvelop()
         {
             Id = Guid.NewGuid();
             CreatedDate = DateTime.Now;
         }
+
+        public Movie Translate() =>
+            new Movie()
+            {
+                Id = this.Id,
+                CreatedDate = this.CreatedDate,
+                UserId = this.UserId,
+                Title = this.Title,
+                Description = this.Description,
+                Year = this.Year,
+                Director = this.Director,
+                Poster = this.Poster
+            };
     }
 }
