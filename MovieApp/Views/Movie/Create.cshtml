@@ -1,43 +1,52 @@
 ﻿@model MovieApp.Models.MovieEnvelop
 @{
-    Layout = null;
+    ViewBag.Title = "Новый фильм";
 }
 
-<!DOCTYPE html>
+<h2>@ViewBag.Title.</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Новый фильм</title>
-</head>
-<body>
-    <h2>Новый фильм</h2>
+@using (Html.BeginForm("Create", "Movie", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Title, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Director, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Director, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Year, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Year, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Poster, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            <input type="file" name="Picture" accept="image/gif, image/jpeg, image/png" class="form-control-file" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-success" value="Сохранить" />
+            <button type="button" class="btn btn-light" onclick="location.href='@Url.Action("Index", "Movie")'">Отмена</button>
+        </div>
+    </div>
+}
 
-    @using (Html.BeginForm("Create", "Movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        <fieldset>
-            @Html.LabelFor(model => model.Title, "Название фильма")
-            <br />
-            @Html.EditorFor(model => model.Title)
-            <br /><br />
-            @Html.LabelFor(model => model.Description, "Описание")
-            <br />
-            @Html.EditorFor(model => model.Description)
-            <br /><br />
-            @Html.LabelFor(model => model.Director, "Режисер")
-            <br />
-            @Html.EditorFor(model => model.Director)
-            <br /><br />
-            @Html.LabelFor(model => model.Year, "Год выпуска")
-            <br />
-            @Html.EditorFor(model => model.Year)
-            <br /><br />
-            @Html.LabelFor(model => model.Year, "Постер")
-            <br />
-            <input type="file" name="Picture" />
-            <br /><br />
-            <input type="submit" value="Добавить" />
-        </fieldset>
-    }
-</body>
-</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

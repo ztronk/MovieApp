@@ -3,7 +3,6 @@ using MovieApp.Models;
 using System;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MovieApp.Controllers
@@ -21,8 +20,8 @@ namespace MovieApp.Controllers
             ViewBag.UserId = User.Identity.GetUserId();
 
             ViewBag.Movies = movieContext
-                                .Get();
-                                //.OrderByDescending(e => e.CreatedDate);
+                                .Get()
+                                .OrderByDescending(e => e.CreatedDate);
 
             return View();
         }
@@ -40,18 +39,32 @@ namespace MovieApp.Controllers
         [HttpPost]
         public ActionResult Create(MovieEnvelop movie)
         {
-            //if (CheckUser())
-            //    return RedirectToAction("Index", "Movie");
-
-            if (movie.Picture != null)
+            try
             {
-                string fileName = movie.Id.ToString();
-                movie.Poster = fileName;
-                movie.Picture.SaveAs(Server.MapPath("~/Files/" + fileName));
-            }
+                //if (CheckUser())
+                //    return RedirectToAction("Index", "Movie");
 
-            movieContext.Create(movie.Translate());
-            return RedirectToAction("Index", "Movie");
+                if (ModelState.IsValid)
+                {
+                    if (movie.Picture != null)
+                    {
+                        string fileName = movie.Id.ToString();
+                        string extFile = Path.GetExtension(movie.Picture.FileName);
+                        movie.Poster = string.Format("{0}{1}", fileName, extFile);
+                        movie.Picture.SaveAs(Server.MapPath($"~/Files/{fileName}{extFile}"));
+                    }
+
+                    movie.CreatedDate = DateTime.Now;
+                    movieContext.Create(movie.Translate());
+                    return RedirectToAction("Index", "Movie");
+                }
+                else
+                    return View(movie);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Movie");
+            }
         }
 
         /// <summary>Редактирование информации о фильме</summary>
@@ -62,17 +75,38 @@ namespace MovieApp.Controllers
             //    return RedirectToAction("Index", "Movie");
 
             var movie = movieContext.Get(id);
-            return View(movie);
+            var movieEnvelop = movie.Translate();
+            return View(movieEnvelop);
         }
 
         [HttpPost]
-        public ActionResult Edit(Movie movie)
+        public ActionResult Edit(MovieEnvelop movie)
         {
-            //if (string.IsNullOrEmpty(id))
-            //    return RedirectToAction("Index", "Movie");
+            try
+            {
+                //if (CheckUser())
+                //    return RedirectToAction("Index", "Movie");
 
-            movieContext.Update(movie);
-            return RedirectToAction("Index", "Movie");
+                if (ModelState.IsValid)
+                {
+                    if (movie.Picture != null)
+                    {
+                        string fileName = movie.Id.ToString();
+                        string extFile = Path.GetExtension(movie.Picture.FileName);
+                        movie.Poster = string.Format("{0}{1}", fileName, extFile);
+                        movie.Picture.SaveAs(Server.MapPath($"~/Files/{movieContext.Get(movie.Id).Poster}"));
+                    }
+
+                    movieContext.Update(movie.Translate());
+                    return RedirectToAction("Index", "Movie");
+                }
+                else
+                    return View(movie);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Movie");
+            }
         }
     }
 }

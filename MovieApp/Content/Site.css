@@ -22,3 +22,15 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.poster {
+    width:90px;
+}
+
+.new-movie {
+    margin: 7px 0px 0px 0px;
+}
+
+.edit-movie {
+    margin: 20px 0px 0px 0px;
+}

@@ -27,7 +27,20 @@ namespace MovieApp.Models
         public Movie()
         {
             Id = Guid.NewGuid();
-            CreatedDate = DateTime.Now;
         }
+
+        public MovieEnvelop Translate() =>
+            new MovieEnvelop()
+            {
+                Id = this.Id,
+                CreatedDate = this.CreatedDate,
+                UserId = this.UserId,
+                Title = this.Title,
+                Description = this.Description,
+                Year = this.Year,
+                Director = this.Director,
+                Poster = this.Poster
+            };
+
     }
 }
