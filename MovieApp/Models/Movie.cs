@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web;
 
 namespace MovieApp.Models
@@ -14,14 +15,19 @@ namespace MovieApp.Models
         /// <summary>Идентификатор пользователя, создавшего запись о фильме</summary>
         public string UserId { get; set; }
         /// <summary>Наименование фильма</summary>
+        [Display(Name = "Наименование")]
         public string Title { get; set; }
         /// <summary>Описание фильма</summary>
+        [Display(Name = "Описание")]
         public string Description { get; set; }
         /// <summary>Год выпуска</summary>
+        [Display(Name = "Год создания")]
         public int Year { get; set; }
         /// <summary>Режисер</summary>
+        [Display(Name = "Режисер")]
         public string Director { get; set; }
         /// <summary>Постер - наименование файла</summary>
+        [Display(Name = "Постер")]
         public string Poster { get; set; }
 
         public Movie()

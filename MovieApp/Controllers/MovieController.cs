@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using MovieApp.Models;
+using PagedList;
 using System;
 using System.IO;
 using System.Linq;
@@ -15,23 +16,26 @@ namespace MovieApp.Controllers
             string.IsNullOrEmpty(User.Identity.GetUserId());
 
         /// <summary>Список фильмов</summary>
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             ViewBag.UserId = User.Identity.GetUserId();
 
-            ViewBag.Movies = movieContext
-                                .Get()
-                                .OrderByDescending(e => e.CreatedDate);
+            var movies = movieContext
+                            .Get()
+                            .OrderByDescending(e => e.CreatedDate);
 
-            return View();
+            int pageSize = Config.PageSize;
+            int pageNumber = (page ?? 1);
+
+            return View(movies.ToPagedList(pageNumber, pageSize));
         }
 
         /// <summary>Создание нового фильма</summary>
         [HttpGet]
         public ActionResult Create()
         {
-            //if (CheckUser())
-            //    return RedirectToAction("Index", "Movie");
+            if (CheckUser())
+                return RedirectToAction("Index", "Movie");
 
             return View();
         }
@@ -41,8 +45,8 @@ namespace MovieApp.Controllers
         {
             try
             {
-                //if (CheckUser())
-                //    return RedirectToAction("Index", "Movie");
+                if (CheckUser())
+                    return RedirectToAction("Index", "Movie");
 
                 if (ModelState.IsValid)
                 {
@@ -55,6 +59,7 @@ namespace MovieApp.Controllers
                     }
 
                     movie.CreatedDate = DateTime.Now;
+                    movie.UserId = User.Identity.GetUserId();
                     movieContext.Create(movie.Translate());
                     return RedirectToAction("Index", "Movie");
                 }
@@ -71,8 +76,8 @@ namespace MovieApp.Controllers
         [HttpGet]
         public ActionResult Edit(Guid id)
         {
-            //if (string.IsNullOrEmpty(id))
-            //    return RedirectToAction("Index", "Movie");
+            if (CheckUser())
+                return RedirectToAction("Index", "Movie");
 
             var movie = movieContext.Get(id);
             var movieEnvelop = movie.Translate();
@@ -84,8 +89,8 @@ namespace MovieApp.Controllers
         {
             try
             {
-                //if (CheckUser())
-                //    return RedirectToAction("Index", "Movie");
+                if (CheckUser())
+                    return RedirectToAction("Index", "Movie");
 
                 if (ModelState.IsValid)
                 {
@@ -107,6 +112,14 @@ namespace MovieApp.Controllers
             {
                 return RedirectToAction("Index", "Movie");
             }
+        }
+
+        /// <summary>Просмотр информации о фильме</summary>
+        [HttpGet]
+        public ActionResult Review(Guid id)
+        {
+            var movie = movieContext.Get(id);
+            return View(movie);
         }
     }
 }
