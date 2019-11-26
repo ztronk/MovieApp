@@ -7,6 +7,7 @@ namespace MovieApp.Models
     public class MovieEnvelop
     {
         /// <summary>Идентификатор фильма</summary>
+        [Key]
         public Guid Id { get; set; }
         /// <summary>Дата создания записи о фильме</summary>
         public DateTime CreatedDate { get; set; }
@@ -38,11 +39,6 @@ namespace MovieApp.Models
         /// <summary>Постер - файла</summary>
         [Display(Name = "Постер")]
         public HttpPostedFileBase Picture { get; set; }
-
-        public MovieEnvelop()
-        {
-            Id = Guid.NewGuid();
-        }
 
         public Movie Translate() =>
             new Movie()

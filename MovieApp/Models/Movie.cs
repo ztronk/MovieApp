@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web;
 
 namespace MovieApp.Models
 {
@@ -9,6 +7,7 @@ namespace MovieApp.Models
     public class Movie
     {
         /// <summary>Идентификатор фильма</summary>
+        [Key]
         public Guid Id { get; set; }
         /// <summary>Дата создания записи о фильме</summary>
         public DateTime CreatedDate { get; set; }
@@ -29,11 +28,6 @@ namespace MovieApp.Models
         /// <summary>Постер - наименование файла</summary>
         [Display(Name = "Постер")]
         public string Poster { get; set; }
-
-        public Movie()
-        {
-            Id = Guid.NewGuid();
-        }
 
         public MovieEnvelop Translate() =>
             new MovieEnvelop()

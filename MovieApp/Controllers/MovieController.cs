@@ -58,6 +58,7 @@ namespace MovieApp.Controllers
                         movie.Picture.SaveAs(Server.MapPath($"~/Files/{fileName}{extFile}"));
                     }
 
+                    movie.Id = Guid.NewGuid();
                     movie.CreatedDate = DateTime.Now;
                     movie.UserId = User.Identity.GetUserId();
                     movieContext.Create(movie.Translate());
@@ -76,16 +77,23 @@ namespace MovieApp.Controllers
         [HttpGet]
         public ActionResult Edit(Guid id)
         {
-            if (CheckUser())
-                return RedirectToAction("Index", "Movie");
+            try
+            {
+                if (CheckUser())
+                    return RedirectToAction("Index", "Movie");
 
-            var movie = movieContext.Get(id);
-            var movieEnvelop = movie.Translate();
-            return View(movieEnvelop);
+                var movie = movieContext.Get(id);
+                var movieEnvelop = movie.Translate();
+                return View(movieEnvelop);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Movie");
+            }
         }
 
         [HttpPost]
-        public ActionResult Edit(MovieEnvelop movie)
+        public ActionResult Edit(MovieEnvelop movieEnvelop)
         {
             try
             {
@@ -94,19 +102,26 @@ namespace MovieApp.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    if (movie.Picture != null)
+                    if (movieEnvelop.Picture != null)
                     {
-                        string fileName = movie.Id.ToString();
-                        string extFile = Path.GetExtension(movie.Picture.FileName);
-                        movie.Poster = string.Format("{0}{1}", fileName, extFile);
-                        movie.Picture.SaveAs(Server.MapPath($"~/Files/{movieContext.Get(movie.Id).Poster}"));
-                    }
+                        string fileName = movieEnvelop.Id.ToString();
+                        string extFile = Path.GetExtension(movieEnvelop.Picture.FileName);
 
-                    movieContext.Update(movie.Translate());
+                        movieEnvelop.Poster = string.IsNullOrEmpty(movieEnvelop.Poster)
+                                        ? string.Format("{0}{1}", fileName, extFile)
+                                        : movieEnvelop.Poster;
+
+                        movieEnvelop.Picture.SaveAs(Server.MapPath($"~/Files/{movieEnvelop.Poster}"));
+
+                        var movie = movieContext.Get(movieEnvelop.Id);
+                        movie.Poster = movieEnvelop.Poster;
+
+                        movieContext.Update(movie);
+                    }
                     return RedirectToAction("Index", "Movie");
                 }
                 else
-                    return View(movie);
+                    return View(movieEnvelop);
             }
             catch (Exception ex)
             {
@@ -118,8 +133,15 @@ namespace MovieApp.Controllers
         [HttpGet]
         public ActionResult Review(Guid id)
         {
-            var movie = movieContext.Get(id);
-            return View(movie);
+            try
+            {
+                var movie = movieContext.Get(id);
+                return View(movie);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Movie");
+            }
         }
     }
 }

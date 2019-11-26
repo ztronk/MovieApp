@@ -154,32 +154,6 @@ namespace MovieApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    try
-                    {
-                        using (AccountContext accContext = new AccountContext())
-                        {
-                            accContext.Create(new Account()
-                            {
-                                Id = user.Id,
-                                Email = user.Email,
-                                FullName = user.UserName
-                            });
-                        }
-
-                        using (MovieContext movieContext = new MovieContext())
-                        {
-                            movieContext.Create(new Movie()
-                            {
-                                Id = Guid.NewGuid(),
-                                UserId = user.Id,
-                                Title = "Книга " + DateTime.Now.ToShortTimeString(),
-                                Year = DateTime.Now.Year
-                            });
-                        }
-                    }
-                    catch (Exception ex)
-                    { }
-
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
