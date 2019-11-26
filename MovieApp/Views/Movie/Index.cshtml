@@ -29,6 +29,15 @@
     </div>
 
     <table class="table" style="margin-top:50px;">
+        @if (!Model.Any())
+        {
+            <tr>
+                <td class="poster">
+                    <span>Нет данных для отображения</span>
+                </td>
+            </tr>
+        }
+
         @foreach (var movie in Model)
         {
             <tr>
@@ -64,9 +73,12 @@
     </table>
 
     <br />
-    Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
-
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    
+    @if (Model.Any())
+    {
+        <span>Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount</span>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    }
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
